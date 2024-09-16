@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Load the external stylesheet for the page's styling -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- Tell the browser to use UTF-8 so it can display characters properly -->
+    <meta charset="UTF-8">
+    
+    <!-- Make sure the page adjusts well to different screen sizes, especially for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- This is the title that will show up on the browser tab -->
+    <title>GradeCalc</title>
+    
+    <!-- Some quick inline CSS to keep the result section hidden by default -->
+    <style>
+        .result {
+            display: none; /* Don't show the result section until we need it */
+        }
+    </style>
+</head>
+<body>
+    <!-- The main heading of the page that tells users what this is for -->
+    <h1>Calculate Required Midterm and Final Grades</h1>
+    
+    <!-- A simple form where users will input their preliminary grade -->
+    <form method="POST" id="gradeForm">
+        <!-- Label and input field for the user to enter their preliminary grade -->
+        <label for="prelim_grade">Enter Preliminary Grade:</label>
+        <input type="number" id="prelim_grade" name="prelim_grade" step="0.01" min="0" max="100" required>
+        
+        <!-- A container for the buttons: one to calculate and one to clear the form -->
+        <div class="button-container">
+            <!-- The button that will submit the form and run the grade calculation -->
+            <button type="submit">Calculate</button>
+            
+            <!-- This button clears the form and hides the result section -->
+            <button type="reset" id="clearBtn">Clear</button>
+        </div>
+        
+        <!-- This section shows the results of the grade calculation, but stays hidden until needed -->
+        <div id="resultSection" class="result" style="display: {% if result %}block{% else %}none{% endif %};">
+            {% if result %}
+            <!-- The result message goes here -->
+            <h2>Result:</h2>
+            <!-- We'll use different styles depending on whether it's a success or an error message -->
+            <p class="{% if 'Keep' in result %}message-success{% else %}message-error{% endif %}">{{ result }}</p>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Here's some JavaScript to handle dynamic updates on the page -->
+    <script>
+        // When the page loads, check if the result section has any content, and hide it if it's empty
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultSection = document.getElementById('resultSection');
+            if (!resultSection.innerHTML.trim()) {
+                resultSection.style.display = 'none';
+            }
+        });
+
+        // When the user clicks the clear button, hide the result section
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            document.getElementById('resultSection').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
